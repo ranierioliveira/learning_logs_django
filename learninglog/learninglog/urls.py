@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('learning_logs.urls')),
+    path('', include('learning_logs.urls')), #quando acessar / redireciona as rotas definidas no app learning_logs
 ]
