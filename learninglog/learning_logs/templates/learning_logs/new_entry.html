@@ -1,0 +1,13 @@
+{% extends "learning_logs/base.html" %}
+
+{% block content %} 
+    <p><a href="{% url 'topic' topic.id %}">{{ topic }}</a></p>
+
+    <p>Adiciona uma nova entrada: </p>
+    
+    <form action="{% url 'new_entry' topic.id %}" method="post"> <!--envia para a própria página -->
+        {% csrf_token %} <!-- Tag de template obrigatória em django-->
+        {{ form.as_p }} <!--  Vai formatar o formulário -->
+        <button name="submit">Adicionar</button>
+    </form>
+{% endblock content %}

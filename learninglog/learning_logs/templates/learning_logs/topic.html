@@ -1,0 +1,21 @@
+{% extends "learning_logs/base.html" %}
+
+{% block content %}
+
+    <p>Tópico: {{topic}}</p>
+
+    <p>Anotações: </p>
+    <ul>
+        {% for entry in entries %}
+            <li>
+                <p>{{ entry.text | linebreaks }}</p>
+                <p>{{ entry.date_added|date:"M d, Y H:i "}}</p>
+            </li>
+        {% empty %}
+            <li>Não há anotações</li>
+        {% endfor %}
+    </ul>
+    <p>
+        <a href="{% url 'new_entry' topic.id %}">Adiciona uma nova anotação</a>
+    </p>
+{% endblock content%}
