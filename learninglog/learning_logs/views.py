@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Topic
+from .models import Topic, Entry
 from .forms import TopicForm, EntryForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -49,9 +49,29 @@ def new_entry(request, topic_id):
         form = EntryForm(data = request.POST) #não ser pego apenas o data da requisição por enquanto
         if form.is_valid(): #Valida os dados inseridos
                 new_entry = form.save(commit=False) #commit false vai fazer com que não salve no banco ainda
-                new_entry.topic = form #Agora sim vai ser adicionado o tópico da nova entrada
+                new_entry.topic = topic #Agora sim vai ser adicionado o tópico da nova entrada
                 new_entry.save() #Salva no banco de dados
                 return HttpResponseRedirect(reverse('topics', args=[topic_id]))#Vai redirecionar para o tópico em específico
     
     context = {'topic': topic, 'form': form} #Senão entrar no else, vai ser executado essa linha
     return render(request,'learning_logs/new_entry.html', context)
+
+def edit_entry(request, entry_id):
+    '''Edita uma entrada existente'''
+    entry = Entry.objects.get(id = entry_id)
+    topic = entry.topic #Vai pegar o id do topic, pois topic é uma atribuito de entry
+
+    if request.method != 'POST':
+        #requisição inicial; preenche previamente o formulário com a entrada atual
+        form = EntryForm(instance=entry) #já vai abrir preenchido
+    else:
+        #Dados de post submetidos, processa os dados
+        form = EntryForm(instance=entry, data=request.POST)#Preenche com entry, porém atualizou com o que foi enviado
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('topic', args=[topic.id]))
+        else:
+            print(form.errors)
+    
+    context = {'entry': entry, 'topic': topic, 'form': form} #é utilizado no template html
+    return render(request,'learning_logs/edit_entry.html', context) #vai renderizar a página

@@ -10,6 +10,9 @@
             <li>
                 <p>{{ entry.text | linebreaks }}</p>
                 <p>{{ entry.date_added|date:"M d, Y H:i "}}</p>
+                <p>
+                    <a href="{% url 'edit_entry' entry.id %}">Editar anotação</a>
+                </p>
             </li>
         {% empty %}
             <li>Não há anotações</li>
